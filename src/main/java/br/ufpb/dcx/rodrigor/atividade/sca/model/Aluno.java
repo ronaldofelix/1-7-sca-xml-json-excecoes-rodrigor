@@ -19,6 +19,9 @@ public class Aluno {
     }
 
     public void setMatricula(String matricula) {
+        if(matricula == null || matricula.length() == 0)
+            throw new IllegalArgumentException("matricula == null!!!!!! cuida!!");
+
         this.matricula = matricula;
     }
 
