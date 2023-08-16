@@ -1,5 +1,6 @@
 package br.ufpb.dcx.rodrigor.atividade.sca.persistencia.xml;
 import br.ufpb.dcx.rodrigor.atividade.sca.model.Aluno;
+import br.ufpb.dcx.rodrigor.atividade.sca.persistencia.ErroPersistenciaException;
 import br.ufpb.dcx.rodrigor.atividade.sca.persistencia.GerentePersistenciaAlunos;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -44,7 +45,7 @@ public class GerenciadorAlunosXML implements GerentePersistenciaAlunos {
                 return listaAlunos;
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Erro ao recuperar alunos do arquivo XML: " + e.getMessage());
+            throw new ErroPersistenciaException(e.getMessage());
         }
 
         return null;
@@ -58,7 +59,7 @@ public class GerenciadorAlunosXML implements GerentePersistenciaAlunos {
             oos.writeObject(listaAlunos);
             oos.close();
         } catch (IOException e) {
-            System.out.println("Erro ao salvar alunos no arquivo XML: " + e.getMessage());
+            throw new ErroPersistenciaException("Erro ao salvar alunos no arquivo XML: " + e.getMessage());
         }
     }
 }

@@ -66,8 +66,13 @@ public class MenusTexto {
         }
 
         Aluno aluno = new Aluno(matricula, nome, dataNascimento);
-        this.gerentePersistenciaAlunos.cadastrarAluno(aluno);
 
+        try {
+            this.gerentePersistenciaAlunos.cadastrarAluno(aluno);
+        }catch (Exception e){
+            System.out.println("Infelizmente houve um erro interno do sistema!");
+            return;
+        }
         System.out.println("Aluno cadastrado com sucesso!");
     }
 
