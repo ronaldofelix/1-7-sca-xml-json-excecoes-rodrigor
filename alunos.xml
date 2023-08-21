@@ -1,9 +1,24 @@
 <object-stream>
   <list>
     <aluno>
+      <matricula></matricula>
+      <nome></nome>
+      <dataNascimento>1997-01-17</dataNascimento>
+    </aluno>
+    <aluno>
       <matricula>123</matricula>
-      <nome>Rodrigo</nome>
-      <dataNascimento>1979-12-26</dataNascimento>
+      <nome>456</nome>
+      <dataNascimento>2050-01-17</dataNascimento>
+    </aluno>
+    <aluno>
+      <matricula>cachorro</matricula>
+      <nome>ronaldo</nome>
+      <dataNascimento>1997-01-17</dataNascimento>
+    </aluno>
+    <aluno>
+      <matricula>123</matricula>
+      <nome>ronaldo</nome>
+      <dataNascimento>1997-01-17</dataNascimento>
     </aluno>
   </list>
 </object-stream>

@@ -1,10 +1,10 @@
 package br.ufpb.dcx.rodrigor.atividade.sca.text_ui;
+
 import br.ufpb.dcx.rodrigor.atividade.sca.model.Aluno;
 import br.ufpb.dcx.rodrigor.atividade.sca.persistencia.GerentePersistenciaAlunos;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -50,43 +50,56 @@ public class MenusTexto {
         System.out.println("------ Cadastro de Aluno ------");
         System.out.print("Digite a matrícula do aluno: ");
         String matricula = scanner.nextLine();
-
-        System.out.print("Digite o nome do aluno: ");
-        String nome = scanner.nextLine();
-
-        System.out.print("Digite a data de nascimento do aluno (dd/MM/yyyy): ");
-        String dataNascimentoStr = scanner.nextLine();
-
-        LocalDate dataNascimento;
         try {
-            dataNascimento = LocalDate.parse(dataNascimentoStr, formatter);
-        } catch (Exception e) {
-            System.out.println("Data de nascimento inválida! O aluno não será cadastrado.");
-            return;
+            Integer.parseInt(matricula);
+            System.out.print("Digite o nome do aluno: ");
+            String nome = scanner.nextLine();
+            if (matricula.isEmpty() | nome.isEmpty()) {
+                System.out.println("Matrícula ou nome inválidos! O aluno não será cadastrado.");
+            } else {
+                System.out.print("Digite a data de nascimento do aluno (dd/MM/yyyy): ");
+                String dataNascimentoStr = scanner.nextLine();
+
+                LocalDate dataNascimento;
+                try {
+                    dataNascimento = LocalDate.parse(dataNascimentoStr, formatter);
+                } catch (Exception e) {
+                    System.out.println("Data de nascimento inválida! O aluno não será cadastrado.");
+                    return;
+                }
+
+                Aluno aluno = new Aluno(matricula, nome, dataNascimento);
+
+                try {
+                    this.gerentePersistenciaAlunos.cadastrarAluno(aluno);
+                } catch (Exception e) {
+                    System.out.println("Infelizmente houve um erro interno do sistema!");
+                    return;
+                }
+                System.out.println("Aluno cadastrado com sucesso!");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("A matrícula não é um número inteiro válido.");
         }
 
-        Aluno aluno = new Aluno(matricula, nome, dataNascimento);
-
-        try {
-            this.gerentePersistenciaAlunos.cadastrarAluno(aluno);
-        }catch (Exception e){
-            System.out.println("Infelizmente houve um erro interno do sistema!");
-            return;
-        }
-        System.out.println("Aluno cadastrado com sucesso!");
     }
 
     public void listarAlunos() {
-        List<Aluno> listaAlunos = this.gerentePersistenciaAlunos.recuperarAlunos();
-        if (listaAlunos.isEmpty()) {
-            System.out.println("Não há alunos cadastrados.");
-            return;
+        try {
+            List<Aluno> listaAlunos = this.gerentePersistenciaAlunos.recuperarAlunos();
+            if (listaAlunos.isEmpty()) {
+                System.out.println("Não há alunos cadastrados.");
+                return;
+            }
+
+            System.out.println("------ Lista de Alunos ------");
+            for (Aluno aluno : listaAlunos) {
+                System.out.println(aluno);
+            }
+        } catch (Exception e) {
+            System.out.println("Infelizmente houve um erro interno do sistema!");
         }
 
-        System.out.println("------ Lista de Alunos ------");
-        for (Aluno aluno : listaAlunos) {
-            System.out.println(aluno);
-        }
     }
 
 }

@@ -7,6 +7,9 @@ public class Aluno {
     private String nome;
     private LocalDate dataNascimento;
 
+    public Aluno() {
+    }
+
     public Aluno(String matricula, String nome, LocalDate dataNascimento) {
         this.matricula = matricula;
         this.nome = nome;
@@ -19,7 +22,7 @@ public class Aluno {
     }
 
     public void setMatricula(String matricula) {
-        if(matricula == null || matricula.length() == 0)
+        if (matricula == null || matricula.length() == 0)
             throw new IllegalArgumentException("matricula == null!!!!!! cuida!!");
 
         this.matricula = matricula;

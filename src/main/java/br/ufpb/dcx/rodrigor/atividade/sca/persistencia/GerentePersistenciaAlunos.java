@@ -7,6 +7,7 @@ import java.util.List;
 public interface GerentePersistenciaAlunos {
 
     public void cadastrarAluno(Aluno aluno) throws ErroPersistenciaException;
-    public List<Aluno> recuperarAlunos();
+
+    public List<Aluno> recuperarAlunos() throws ErroPersistenciaException;
 
 }

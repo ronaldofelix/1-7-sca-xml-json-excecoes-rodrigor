@@ -1,9 +1,12 @@
 package br.ufpb.dcx.rodrigor.atividade.sca.persistencia.json;
 
 import br.ufpb.dcx.rodrigor.atividade.sca.model.Aluno;
+import br.ufpb.dcx.rodrigor.atividade.sca.persistencia.ErroPersistenciaException;
 import br.ufpb.dcx.rodrigor.atividade.sca.persistencia.GerentePersistenciaAlunos;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,7 @@ public class GerenciadorAlunosJSON implements GerentePersistenciaAlunos {
     public GerenciadorAlunosJSON(String nomeArquivo) {
         this.nomeArquivo = nomeArquivo;
         this.objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     public void setNomeArquivo(String nomeArquivo) {
@@ -22,14 +26,18 @@ public class GerenciadorAlunosJSON implements GerentePersistenciaAlunos {
     }
 
     public void cadastrarAluno(Aluno aluno) {
-        List<Aluno> listaAlunos = recuperarAlunos();
+        try {
+            List<Aluno> listaAlunos = recuperarAlunos();
 
-        if (listaAlunos == null) {
-            listaAlunos = new ArrayList<>();
+            if (listaAlunos == null) {
+                listaAlunos = new ArrayList<>();
+            }
+
+            listaAlunos.add(aluno);
+            salvarAlunos(listaAlunos);
+        } catch (RuntimeException e) {
+            throw new ErroPersistenciaException("Erro ao cadastrar aluno: " + e.getMessage());
         }
-
-        listaAlunos.add(aluno);
-        salvarAlunos(listaAlunos);
     }
 
     public List<Aluno> recuperarAlunos() {
@@ -38,12 +46,13 @@ public class GerenciadorAlunosJSON implements GerentePersistenciaAlunos {
 
             if (arquivo.exists()) {
                 FileInputStream fis = new FileInputStream(arquivo);
-                List<Aluno> listaAlunos = objectMapper.readValue(fis, new TypeReference<List<Aluno>>() {});
+                List<Aluno> listaAlunos = objectMapper.readValue(fis, new TypeReference<List<Aluno>>() {
+                });
                 fis.close();
                 return listaAlunos;
             }
         } catch (IOException e) {
-            System.out.println("Erro ao recuperar alunos do arquivo JSON: " + e.getMessage());
+            throw new ErroPersistenciaException("Erro ao tentar recuperar os arquivos" + e.getMessage());
         }
 
         return null;
@@ -56,7 +65,7 @@ public class GerenciadorAlunosJSON implements GerentePersistenciaAlunos {
             objectMapper.writeValue(fos, listaAlunos);
             fos.close();
         } catch (IOException e) {
-            System.out.println("Erro ao salvar alunos no arquivo JSON: " + e.getMessage());
+            throw new ErroPersistenciaException("Erro ao salvar alunos no arquivo XML: " + e.getMessage());
         }
     }
 }
